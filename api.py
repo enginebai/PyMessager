@@ -1,11 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import json
 from flask import Flask, request
 
 __author__ = 'enginebai'
 
 API_ROOT = 'api/'
 FB_WEBHOOK = 'fb_webhook'
+FB_ROUTE = 'fb'
 
 app = Flask(__name__)
 
@@ -16,3 +18,16 @@ def fb_webhook():
     verify_token = request.args.get('hub.verify_token')
     if verification_code == verify_token:
         return request.args.get('hub.challenge')
+
+
+@app.route(API_ROOT + FB_ROUTE, methods=['POST'])
+def fb_receive_message():
+    message_entries = json.loads(request.data.decode('utf8'))['entry']
+    for entry in message_entries:
+        messagings = entry['messaging']
+        for message in messagings:
+            sender = message['sender']['id']
+            if message.get('message'):
+                text = message['message']['text']
+                print("{} says {}".format(sender, text))
+    return "Hi"
