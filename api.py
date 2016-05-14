@@ -1,7 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import json
+
 from flask import Flask, request
+import requests
 
 __author__ = 'enginebai'
 
@@ -31,3 +33,13 @@ def fb_receive_message():
                 text = message['message']['text']
                 print("{} says {}".format(sender, text))
     return "Hi"
+
+
+def send_fb_message(to, message):
+    post_message_url = 'https://graph.facebook.com/v2.6/me/messages?access_token={token}'.format(token=config.FB_TOKEN)
+    response_message = json.dumps({"recipient":{"id": to},
+                                   "message":{"text":message}})
+    req = requests.post(post_message_url,
+                        headers={"Content-Type": "application/json"},
+                        data=response_message)
+    print("[{}] Reply to {}: {}", req.status_code, to, message)
