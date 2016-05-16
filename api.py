@@ -9,7 +9,6 @@ __author__ = 'enginebai'
 
 API_ROOT = 'api/'
 FB_WEBHOOK = 'fb_webhook'
-FB_ROUTE = 'fb'
 
 app = Flask(__name__)
 
@@ -22,7 +21,7 @@ def fb_webhook():
         return request.args.get('hub.challenge')
 
 
-@app.route(API_ROOT + FB_ROUTE, methods=['POST'])
+@app.route(API_ROOT + FB_WEBHOOK, methods=['POST'])
 def fb_receive_message():
     message_entries = json.loads(request.data.decode('utf8'))['entry']
     for entry in message_entries:
@@ -43,3 +42,8 @@ def send_fb_message(to, message):
                         headers={"Content-Type": "application/json"},
                         data=response_message)
     print("[{}] Reply to {}: {}", req.status_code, to, message)
+
+
+if __name__ == '__main__':
+    context = ('ssl/fullchain.pem', 'ssl/privkey.pem')
+    app.run(host='0.0.0.0', debug=True, ssl_context=context)
