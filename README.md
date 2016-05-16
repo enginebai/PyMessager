@@ -1,5 +1,5 @@
 # Facebook-Message-Bot
-This is the simple introduction to use Python Flask to develop chat bot on Facebook by  [Message Platform](https://medium.com/r/?url=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fmessenger-platform). The full content is on [my blog]().
+This is the simple introduction to use Python Flask to develop chat bot on Facebook by  [Message Platform](https://medium.com/r/?url=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fmessenger-platform). The full content is on [my blog](https://medium.com/@enginebai/用python開發facebook-bot-26594f13f9f7#.7iwm148ag) and you can check it out.
 
 ![Photo Credit: https://messengerplatform.fb.com](https://cdn-images-1.medium.com/max/1600/1*FaXmJ1pHvSc55lwckZxKuQ.png)
 
@@ -16,7 +16,7 @@ There are three main steps:
 2. Receive the message.
 3. Send the message.
 
-Just clone this repository, check out [my article]() and run API on your server.
+Just clone this repository, check out [my article](https://medium.com/@enginebai/用python開發facebook-bot-26594f13f9f7#.7iwm148ag) and run API on your server.
 
 ## License
 
