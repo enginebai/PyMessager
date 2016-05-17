@@ -103,3 +103,4 @@ ENV/
 .ropeproject
 
 .idea/
+config.py
