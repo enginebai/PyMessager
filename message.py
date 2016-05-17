@@ -43,43 +43,45 @@ class ButtonType(Enum):
 
 
 class SendMessage:
-
     def __init__(self, recipient_id):
         super().__init__()
         self.receipient_type = Recipient.ID
         self.receipient_value = recipient_id
+        self.message_data = None
 
     @classmethod
     def init_send_by_phone(cls, phone):
         return cls(Recipient.PHONE_NUMBER, phone)
 
-    def format_recipient(self):
-        return {(Recipient.ID.value
-                 if self.receipient_type == Recipient.ID
-                 else Recipient.PHONE_NUMBER.value): self.receipient_value
-                }
+    def build_recipient(self):
+        self.message_data = {(Recipient.ID.value
+                              if self.receipient_type == Recipient.ID
+                              else Recipient.PHONE_NUMBER.value): self.receipient_value
+                             }
 
-    def send_text(self, text):
-        return {RECIPIENT_FIELD: self.format_recipient(),
-                MESSAGE_FIELD: {MessageType.TEXT.value: text}}
+    def build_text_message(self, text):
+        self.message_data = {RECIPIENT_FIELD: self.build_recipient(),
+                             MESSAGE_FIELD: {MessageType.TEXT.value: text}}
 
-    def send_image(self, image):
-        return {RECIPIENT_FIELD: self.format_recipient(),
-                MESSAGE_FIELD: {
-                    ATTACHMENT_FIELD: {
-                        TYPE_FIELD: AttachmentType.IMAGE.value,
-                        PAYLOAD_FIELD: {
-                            URL_FIELD: image
-                        }
-                    }
-                }}
+    def build_image_message(self, image):
+        self.message_data = {RECIPIENT_FIELD: self.build_recipient(),
+                             MESSAGE_FIELD: {
+                                 ATTACHMENT_FIELD: {
+                                     TYPE_FIELD: AttachmentType.IMAGE.value,
+                                     PAYLOAD_FIELD: {
+                                         URL_FIELD: image
+                                     }
+                                 }
+                             }}
 
-
-def send_message(message):
-    post_message_url = 'https://graph.facebook.com/v2.6/me/messages?access_token={token}'.format(token=config.FB_TOKEN)
-    response_message = json.dumps(message)
-    req = requests.post(post_message_url,
-                        headers={"Content-Type": "application/json"},
-                        data=response_message)
-    print("[{status}] Reply to {recipient}: {content}".format(
-        status=req.status_code, recipient=message[RECIPIENT_FIELD], content=message[MESSAGE_FIELD]))
+    def send_message(self):
+        post_message_url = 'https://graph.facebook.com/v2.6/me/messages?access_token={token}'.format(
+            token=config.FB_TOKEN)
+        response_message = json.dumps(self.message_data)
+        req = requests.post(post_message_url,
+                            headers={"Content-Type": "application/json"},
+                            data=response_message)
+        print("[{status}] Reply to {recipient}: {content}".format(
+            status=req.status_code,
+            recipient=self.message_data[RECIPIENT_FIELD],
+            content=self.message_data[MESSAGE_FIELD]))
