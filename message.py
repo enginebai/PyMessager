@@ -16,9 +16,11 @@ TEMPLATE_TYPE_FIELD = 'template_type'
 TEXT_FIELD = 'text'
 TITLE_FIELD = 'title'
 SUBTITLE_FIELD = 'subtitle'
+IMAGE_FIELD = 'image_url'
 BUTTONS_FIELD = 'buttons'
 PAYLOAD_FIELD = 'payload'
 URL_FIELD = 'url'
+ELEMENTS_FIELD = 'elements'
 
 
 class Recipient(Enum):
@@ -66,6 +68,26 @@ class ActionButton:
         return button_dict
 
 
+class GenericElement:
+    def __init__(self, title, subtitle, image_url, buttons):
+        super().__init__()
+        self.title = title
+        self.subtitle = subtitle
+        self.image_url = image_url
+        self.buttons = buttons
+
+    def to_dict(self):
+        element_dict = dict()
+        element_dict[TITLE_FIELD] = self.title
+        element_dict[SUBTITLE_FIELD] = self.subtitle
+        element_dict[IMAGE_FIELD] = self.image_url
+        buttons = list(dict())
+        for i in range(len(self.buttons)):
+            buttons.append(self.buttons[i].to_dict())
+        element_dict[BUTTONS_FIELD] = buttons
+        return element_dict
+
+
 class SendMessage:
     def __init__(self, recipient_id):
         super().__init__()
@@ -111,6 +133,21 @@ class SendMessage:
                                          TEMPLATE_TYPE_FIELD: TemplateType.BUTTON.value,
                                          TEXT_FIELD: title,
                                          BUTTONS_FIELD: buttons
+                                     }
+                                 }
+                             }}
+
+    def build_generic_message(self, element_list):
+        elements = list(dict())
+        for i in range(len(element_list)):
+            elements.append(element_list[i].to_dict())
+        self.message_data = {RECIPIENT_FIELD: self.build_recipient(),
+                             MESSAGE_FIELD: {
+                                 ATTACHMENT_FIELD: {
+                                     TYPE_FIELD: AttachmentType.TEMPLATE.value,
+                                     PAYLOAD_FIELD: {
+                                         TEMPLATE_TYPE_FIELD: TemplateType.GENERIC.value,
+                                         ELEMENTS_FIELD: elements
                                      }
                                  }
                              }}
