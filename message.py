@@ -8,6 +8,7 @@ import config
 
 __author__ = 'enginebai'
 
+# send message fields
 RECIPIENT_FIELD = 'recipient'
 MESSAGE_FIELD = 'message'
 ATTACHMENT_FIELD = 'attachment'
@@ -21,6 +22,9 @@ BUTTONS_FIELD = 'buttons'
 PAYLOAD_FIELD = 'payload'
 URL_FIELD = 'url'
 ELEMENTS_FIELD = 'elements'
+
+# received message fields
+POSTBACK_FIELD = 'postback'
 
 
 class Recipient(Enum):
@@ -108,6 +112,7 @@ class SendMessage:
     def build_text_message(self, text):
         self.message_data = {RECIPIENT_FIELD: self.build_recipient(),
                              MESSAGE_FIELD: {MessageType.TEXT.value: text}}
+        return self
 
     def build_image_message(self, image):
         self.message_data = {RECIPIENT_FIELD: self.build_recipient(),
@@ -119,6 +124,7 @@ class SendMessage:
                                      }
                                  }
                              }}
+        return self
 
     def build_buttons_message(self, title, button_list):
         buttons = list(dict())
@@ -136,6 +142,7 @@ class SendMessage:
                                      }
                                  }
                              }}
+        return self
 
     def build_generic_message(self, element_list):
         elements = list(dict())
@@ -151,8 +158,12 @@ class SendMessage:
                                      }
                                  }
                              }}
+        return self
 
     def send_message(self):
+        if self.receipient_value is None:
+            print("Please set the recipient!")
+            return
         post_message_url = 'https://graph.facebook.com/v2.6/me/messages?access_token={token}'.format(
             token=config.FB_TOKEN)
         response_message = json.dumps(self.message_data)
