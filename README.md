@@ -132,6 +132,9 @@ The class represents the message entity object which sent to the user. Provide t
 #### `build_generic_message(element_list)`
 * `element_list`: The list of `GenericElement` objects.
 
+#### `send_message()`
+* **Make sure call this API after building a message.**
+
 ### ButtonType
 The enum provide two value to specify the type of button.
 
