@@ -1,7 +1,7 @@
 # PyMessager
 PyMessager is a project to demostrate the simple bot development on [Facebook Message Platform](https://medium.com/r/?url=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fmessenger-platform) using Python Flask and provide Python API to help you develop your bot on Facebook.
 
-![Our startup](https://enginebai.com/enginebai.ai/project/dualcores/dualcores.png)
+![Our startup](https://raw.githubusercontent.com/enginebai/PyMessager/master/art/dualcores.png)
 
 A full tutorial to on [My Medium](https://medium.com/@enginebai/用python開發facebook-bot-26594f13f9f7#.7iwm148ag) and you can find more detail information to setup before coding and get starting the project.
 
@@ -64,7 +64,7 @@ from message import SendMessage
 ```
 
 ### Text
-![](https://enginebai.com/enginebai.ai/project/pymessager/text.png)
+![](https://raw.githubusercontent.com/enginebai/PyMessager/master/art/text.png)
 
 ```python
 SendMessage(recipient_id)
@@ -73,7 +73,7 @@ SendMessage(recipient_id)
 ```
 
 ### Image
-![](https://enginebai.com/enginebai.ai/project/pymessager/image.png)
+![](https://raw.githubusercontent.com/enginebai/PyMessager/master/art/image.png)
 
 ```python
 SendMessage(recipient_id)
@@ -82,7 +82,7 @@ SendMessage(recipient_id)
 ```
 
 ### Button Template
-![](https://enginebai.com/enginebai.ai/project/pymessager/button.png)
+![](https://raw.githubusercontent.com/enginebai/PyMessager/master/art/button.png)
 
 ```python
 SendMessage(sender).build_buttons_message("直接訂位或查看官方網站？", [
@@ -94,7 +94,7 @@ SendMessage(sender).build_buttons_message("直接訂位或查看官方網站？"
 					url="https://dual-cores.com")])
 ```
 ### Generic Template
-![](https://enginebai.com/enginebai.ai/project/pymessager/generic.png)
+![](https://raw.githubusercontent.com/enginebai/PyMessager/master/art/generic.png)
 
 ```python
 message = SendMessage(recipient_id)
