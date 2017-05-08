@@ -55,7 +55,6 @@ class ButtonType(Enum):
 
 class ActionButton:
     def __init__(self, button_type, title, url=None, payload=None):
-        super().__init__()
         self.button_type = button_type
         self.title = title
         self.url = url
@@ -74,7 +73,6 @@ class ActionButton:
 
 class GenericElement:
     def __init__(self, title, subtitle, image_url, buttons):
-        super().__init__()
         self.title = title
         self.subtitle = subtitle
         self.image_url = image_url
@@ -92,9 +90,8 @@ class GenericElement:
         return element_dict
 
 
-class SendMessage:
+class SendMessageV1:
     def __init__(self, recipient_id):
-        super().__init__()
         self.receipient_type = Recipient.ID
         self.receipient_value = recipient_id
         self.message_data = None
@@ -175,3 +172,73 @@ class SendMessage:
             status=req.status_code,
             recipient=self.message_data[RECIPIENT_FIELD],
             content=self.message_data[MESSAGE_FIELD]))
+
+
+class SendMessage(object):
+    def __init__(self, access_token):
+        self.access_token = access_token
+
+    def send_text(self, user_id, text):
+        self._send({RECIPIENT_FIELD: self._build_recipient(user_id),
+                    MESSAGE_FIELD: {MessageType.TEXT.value: text}})
+
+    def send_image(self, user_id, image):
+        self._send({RECIPIENT_FIELD: self._build_recipient(user_id),
+                    MESSAGE_FIELD: {
+                        ATTACHMENT_FIELD: {
+                            TYPE_FIELD: AttachmentType.IMAGE.value,
+                            PAYLOAD_FIELD: {
+                                URL_FIELD: image
+                            }
+                        }
+                    }})
+
+    def send_buttons(self, user_id, title, button_list):
+        buttons = list(dict())
+        for i in range(len(button_list)):
+            buttons.append(button_list[i].to_dict())
+
+        self._send({RECIPIENT_FIELD: self._build_recipient(user_id),
+                    MESSAGE_FIELD: {
+                        ATTACHMENT_FIELD: {
+                            TYPE_FIELD: AttachmentType.TEMPLATE.value,
+                            PAYLOAD_FIELD: {
+                                TEMPLATE_TYPE_FIELD: TemplateType.BUTTON.value,
+                                TEXT_FIELD: title,
+                                BUTTONS_FIELD: buttons
+                            }
+                        }
+                    }})
+
+    def send_generic(self, user_id, element_list):
+        elements = list(dict())
+        for i in range(len(element_list)):
+            elements.append(element_list[i].to_dict())
+        self._send({RECIPIENT_FIELD: self._build_recipient(user_id),
+                    MESSAGE_FIELD: {
+                        ATTACHMENT_FIELD: {
+                            TYPE_FIELD: AttachmentType.TEMPLATE.value,
+                            PAYLOAD_FIELD: {
+                                TEMPLATE_TYPE_FIELD: TemplateType.GENERIC.value,
+                                ELEMENTS_FIELD: elements
+                            }
+                        }
+                    }})
+
+    @staticmethod
+    def _build_recipient(user_id):
+        return {Recipient.ID.value: user_id}
+
+    def _send(self, message_data):
+        post_message_url = 'https://graph.facebook.com/v2.6/me/messages?access_token={token}'.format(
+            token=self.access_token)
+        response_message = json.dumps(message_data)
+        # print(response_message)
+        req = requests.post(post_message_url,
+                            headers={"Content-Type": "application/json"},
+                            data=response_message)
+        print("[{status}] Reply to {recipient}: {content}".format(
+            status=req.status_code,
+            recipient=message_data[RECIPIENT_FIELD],
+            content=message_data[MESSAGE_FIELD]))
+        pass
