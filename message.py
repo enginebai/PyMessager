@@ -115,9 +115,26 @@ class QuickReply:
         return reply_dict
 
 
-class SendMessage(object):
+class Messager(object):
     def __init__(self, access_token):
         self.access_token = access_token
+
+    def subscribe_to_page(self):
+        return requests.post("https://graph.facebook.com/v2.9/me/subscribed_apps?access_token={token}"
+                             .format(token=self.access_token))
+
+    def set_greeting_text(self, text):
+        data = {"setting_type": "greeting", "greeting": {"text": text}}
+        return requests.post("https://graph.facebook.com/v2.6/me/thread_settings?access_token={token}"
+                             .format(token=self.access_token), headers={"Content-Type": "application/json"},
+                             data=data)
+
+    def set_get_started_button_payload(self, payload):
+        data = {"setting_type": "call_to_actions", "thread_state": "new_thread",
+                "call_to_actions": [{"payload": payload}]}
+        return requests.post("https://graph.facebook.com/v2.6/me/thread_settings?access_token={token}"
+                             .format(token=self.access_token), headers={"Content-Type": "application/json"},
+                             data=data)
 
     def send_text(self, user_id, text):
         self._send({RECIPIENT_FIELD: self._build_recipient(user_id),
