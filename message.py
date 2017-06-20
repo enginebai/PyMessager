@@ -70,7 +70,8 @@ class ActionButton:
     def to_dict(self):
         button_dict = dict()
         button_dict[TYPE_FIELD] = self.button_type.value
-        button_dict[TITLE_FIELD] = self.title
+        if self.title:
+            button_dict[TITLE_FIELD] = self.title
         if self.url is not None:
             button_dict[URL_FIELD] = self.url
         if self.payload is not None:
@@ -87,9 +88,12 @@ class GenericElement:
 
     def to_dict(self):
         element_dict = dict()
-        element_dict[TITLE_FIELD] = self.title
-        element_dict[SUBTITLE_FIELD] = self.subtitle
-        element_dict[IMAGE_FIELD] = self.image_url
+        if self.title:
+            element_dict[TITLE_FIELD] = self.title
+        if self.subtitle:
+            element_dict[SUBTITLE_FIELD] = self.subtitle
+        if self.image_url:
+            element_dict[IMAGE_FIELD] = self.image_url
         buttons = list(dict())
         for i in range(len(self.buttons)):
             buttons.append(self.buttons[i].to_dict())
@@ -107,7 +111,8 @@ class QuickReply:
     def to_dict(self):
         reply_dict = dict()
         reply_dict[CONTENT_TYPE_FIELD] = self.content_type.value
-        reply_dict[TITLE_FIELD] = self.title
+        if self.title:
+            reply_dict[TITLE_FIELD] = self.title
         reply_dict[PAYLOAD_FIELD] = self.payload
         if self.image_url is not None:
             reply_dict[IMAGE_FIELD] = self.image_url
@@ -127,14 +132,14 @@ class Messager(object):
         data = {"setting_type": "greeting", "greeting": {"text": text}}
         return requests.post("https://graph.facebook.com/v2.6/me/thread_settings?access_token={token}"
                              .format(token=self.access_token), headers={"Content-Type": "application/json"},
-                             data=data)
+                             data=json.dumps(data))
 
     def set_get_started_button_payload(self, payload):
         data = {"setting_type": "call_to_actions", "thread_state": "new_thread",
                 "call_to_actions": [{"payload": payload}]}
         return requests.post("https://graph.facebook.com/v2.6/me/thread_settings?access_token={token}"
                              .format(token=self.access_token), headers={"Content-Type": "application/json"},
-                             data=data)
+                             data=json.dumps(data))
 
     def send_text(self, user_id, text):
         self._send({RECIPIENT_FIELD: self._build_recipient(user_id),
@@ -192,6 +197,11 @@ class Messager(object):
                         TEXT_FIELD: title,
                         QUICK_REPLIES_FIELD: replies
                     }})
+
+    def typing(self, user_id, on=True):
+        data = {RECIPIENT_FIELD: {"id": user_id}, "sender_action": "typing_on" if on else "typing_off"}
+        return requests.post("https://graph.facebook.com/v2.6/me/messages?access_token={token}".format(
+            token=self.access_token), headers={"Content-Type": "application/json"}, data=json.dumps(data))
 
     @staticmethod
     def _build_recipient(user_id):
