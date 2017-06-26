@@ -1,0 +1,15 @@
+appdirs==1.4.3
+beautifulsoup4==4.5.3
+bs4==0.0.1
+click==6.7
+Flask==0.12.1
+itsdangerous==0.24
+Jinja2==2.9.6
+MarkupSafe==1.0
+packaging==16.8
+pyparsing==2.2.0
+requests==2.13.0
+six==1.10.0
+SQLAlchemy==1.1.9
+Werkzeug==0.12.1
+wit==4.2.0

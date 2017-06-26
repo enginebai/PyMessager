@@ -70,7 +70,7 @@ class ActionButton:
     def to_dict(self):
         button_dict = dict()
         button_dict[TYPE_FIELD] = self.button_type.value
-        if self.title:
+        if self.title:s
             button_dict[TITLE_FIELD] = self.title
         if self.url is not None:
             button_dict[URL_FIELD] = self.url
