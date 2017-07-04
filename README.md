@@ -141,8 +141,7 @@ The `GenericElement(title, subtitle, image_url, buttons)` class defines a horizo
 
 ```python
 project_list = []
-for project_id in projects.keys():
-    project = projects[project_id]
+for project_id, project in projects.items():
     project_list.append(GenericElement(
         project["title"],
         project["description"],
