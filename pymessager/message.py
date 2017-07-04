@@ -4,7 +4,6 @@ import json
 from enum import Enum
 
 import requests
-import config
 
 __author__ = "enginebai"
 
@@ -70,7 +69,7 @@ class ActionButton:
     def to_dict(self):
         button_dict = dict()
         button_dict[TYPE_FIELD] = self.button_type.value
-        if self.title:s
+        if self.title:
             button_dict[TITLE_FIELD] = self.title
         if self.url is not None:
             button_dict[URL_FIELD] = self.url

@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PyPI version](https://badge.fury.io/py/PyMessager.svg)](https://badge.fury.io/py/PyMessager)
 
-PyMessager is a sample project using [Facebook Messenger](https://developers.facebook.com/docs/messenger-platform) Python SDK to demonstrate how to develop a bot on Facebook Messenger.
+PyMessager is a Python API for [Facebook Messenger](https://developers.facebook.com/docs/messenger-platform) and a sample project to demonstrate how to develop a chatbot on Facebook Messenger.
 
 ![](https://raw.githubusercontent.com/enginebai/PyMessager/master/art/graphic.png)
 
@@ -35,14 +35,14 @@ $ pip install -r requirements.txt
 
 ### Import
 ```python
-from message import Messager, ... # something else you need
+from pymessager.message import Messager, ... # something else you need
 ```
 
 ### Initialization
 You can initialize a messager client via a Facebook Access Token from the developer console:
 
 ```python
-from message import Messager
+from pymessager.message import Messager
 client = Messager(config.facebook_access_token)
 ```
 
@@ -155,7 +155,7 @@ for project_id in projects.keys():
                          # Payload用Intent本身作為開頭
                          payload=Intent.PROJECTS.name + project_id)
         ]))
-self._messager.send_generic(recipient_id, project_list)
+client.send_generic(recipient_id, project_list)
 ```
 
 ## Utility APIs
@@ -193,7 +193,7 @@ Feel free to submit bug reports or feature requests and make sure you read the c
 
 	The MIT License (MIT)
 
-	Copyright © 2016 Engine Bai.
+	Copyright © 2017 Engine Bai.
 
 	Permission is hereby granted, free of charge, to any person obtaining a copy
 	of this software and associated documentation files (the "Software"), to deal
