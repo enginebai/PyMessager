@@ -3,17 +3,17 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PyPI version](https://badge.fury.io/py/PyMessager.svg)](https://badge.fury.io/py/PyMessager)
 
-PyMessager is a [Facebook Messager](https://developers.facebook.com/docs/messenger-platform) Python SDK and sample project to demostrate how to develop a bot on Facebook Messager.
+PyMessager is a sample project using [Facebook Messenger](https://developers.facebook.com/docs/messenger-platform) Python SDK to demonstrate how to develop a bot on Facebook Messenger.
 
 ![](https://raw.githubusercontent.com/enginebai/PyMessager/master/art/graphic.png)
 
-A full tutorials are on [Develop Facebook bot using python](https://medium.com/@enginebai/用python開發facebook-bot-26594f13f9f7#.7iwm148ag) and [Chatbot: from 0 to 1](https://medium.com/dualcores-studio/%E8%81%8A%E5%A4%A9%E6%A9%9F%E5%99%A8%E4%BA%BA%E5%85%A5%E9%96%80-%E5%BE%9E0%E5%88%B01-4792b53a1318) where you can find more detail information to setup and develop.
+Complete tutorials are on [Develop a Facebook Bot Using Python](https://medium.com/@enginebai/用python開發facebook-bot-26594f13f9f7#.7iwm148ag) and [Chatbot: From 0 To 1](https://medium.com/dualcores-studio/%E8%81%8A%E5%A4%A9%E6%A9%9F%E5%99%A8%E4%BA%BA%E5%85%A5%E9%96%80-%E5%BE%9E0%E5%88%B01-4792b53a1318) where you can find more detailed information to setup and develop.
 
 ## Before Starting
-1. Prepare a facebook pages. (to create if you don't have one)
-2. Start a developer application at [facebook to developer](https://developers.facebook.com).
-3. Create a python project, and install the required packages and modules: [Flask](http://flask.pocoo.org), [Requests](http://docs.python-requests.org/en/master/).
-4. Use [Let's Encrypt](https://letsencrypt.org/getting-started/) to apply SSL cerificiation for your domain name.
+1. Prepare a Facebook Page. (to create if you don't have one)
+2. Create a developer application on [Facebook for Developers](https://developers.facebook.com).
+3. Start a python project, and install the required packages and modules: [Flask](http://flask.pocoo.org), [Requests](http://docs.python-requests.org/en/master/).
+4. Use [Let's Encrypt](https://letsencrypt.org/getting-started/) to apply SSL certification for your domain name.
 
 ## Install
 To install PyMessager, simply run:
@@ -22,7 +22,7 @@ To install PyMessager, simply run:
 $ pip install pymessager
 ```
 
-or install from repository:
+or install from the repository:
 
 ```shell
 $ git clone git@github.com:enginebai/PyMessager.git
@@ -39,7 +39,7 @@ from message import Messager, ... # something else you need
 ```
 
 ### Initialization
-You can initialize the messager client via providing the facebook access token from developer console:
+You can initialize a messager client via a Facebook Access Token from the developer console:
 
 ```python
 from message import Messager
@@ -47,9 +47,9 @@ client = Messager(config.facebook_access_token)
 ```
 
 ## Receiver APIs
-The following code is used to build the message receiver, there are three main steps to prepare for you bot:
+The following code is used to build a message receiver, there are three main steps to prepare for your bot:
 
-1.Setup the Webhook.
+1. Setup the Webhook
 
 ```python
 @app.route(API_ROOT + FB_WEBHOOK, methods=["GET"])
@@ -60,7 +60,7 @@ def fb_webhook():
         return request.args.get('hub.challenge')
 ```        
 
-2.Receive the message.
+2. Receive the message
 
 ```python
 @app.route(API_ROOT + FB_WEBHOOK, methods=['POST'])
@@ -76,7 +76,7 @@ def fb_receive_message():
     return "Hi"
 ```
 
-3.Start the server with https.
+3. Start the server with https
 
 ```python
 if __name__ == '__main__':
@@ -88,10 +88,10 @@ if __name__ == '__main__':
 ## Sender APIs
 ![](https://raw.githubusercontent.com/enginebai/PyMessager/master/art/usage.png)
 
-There are serveral types of message: `text`, `image`, `quick replies`, `button template` or `generic template`. API provides different classes to generate the message template.
+There are several types of message: `text`, `image`, `quick replies`, `button template` or `generic template`. API provides different classes to generate the message template.
 
 ### Sending a text and image
-Send a simple text or a image to recipient, just make sure that image URL is a valid link.
+Send a simple text or an image to a recipient, just make sure that image URL is a valid link.
 
 ```python
 client.send_text(recipient_id, "Hello, I'm enginebai."
@@ -161,7 +161,7 @@ self._messager.send_generic(recipient_id, project_list)
 ## Utility APIs
 
 ### Subscribe the pages
-Before your chatbot starts to receive the message, you have to subscribe the application to your chatbot page. To subscribe a page, just call it:
+Before your chatbot starts to receive messages, you have to subscribe the application to your chatbot page. To subscribe a page, just call it:
 
 ```python
 client.subscribe_to_page()
@@ -184,7 +184,7 @@ Feel free to submit bug reports or feature requests and make sure you read the c
 ## Contributing
 1. Check the open/close issues or open a fresh issue for feature request or bug report with different labels (`feature`/`bug`).
 2. Fork this [repository](https://github.com/enginebai/PyMessager) on GitHub to start customizing on master or new branch.
-3. Write a test which shows that the feature works as expected or the bug was fixeed.
+3. Write a test which shows that the feature works as expected or the bug was fixed.
 4. Send a pull request and wait for code review.
 
 [Read more on contributing](./CONTRIBUTING.md).
