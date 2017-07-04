@@ -7,6 +7,8 @@ import requests
 
 __author__ = "enginebai"
 
+URL_BASE = "https://graph.facebook.com/v2.6/me/"  # v2.9?!?
+
 # send message fields
 RECIPIENT_FIELD = "recipient"
 MESSAGE_FIELD = "message"
@@ -67,13 +69,12 @@ class ActionButton:
         self.payload = payload
 
     def to_dict(self):
-        button_dict = dict()
-        button_dict[TYPE_FIELD] = self.button_type.value
+        button_dict = {TYPE_FIELD: self.button_type.value}
         if self.title:
             button_dict[TITLE_FIELD] = self.title
-        if self.url is not None:
+        if self.url:
             button_dict[URL_FIELD] = self.url
-        if self.payload is not None:
+        if self.payload:
             button_dict[PAYLOAD_FIELD] = self.payload
         return button_dict
 
@@ -86,17 +87,13 @@ class GenericElement:
         self.buttons = buttons
 
     def to_dict(self):
-        element_dict = dict()
+        element_dict = {BUTTONS_FIELD: [button.to_dict() for button in self.buttons]}
         if self.title:
             element_dict[TITLE_FIELD] = self.title
         if self.subtitle:
             element_dict[SUBTITLE_FIELD] = self.subtitle
         if self.image_url:
             element_dict[IMAGE_FIELD] = self.image_url
-        buttons = list(dict())
-        for i in range(len(self.buttons)):
-            buttons.append(self.buttons[i].to_dict())
-        element_dict[BUTTONS_FIELD] = buttons
         return element_dict
 
 
@@ -108,12 +105,11 @@ class QuickReply:
         self.content_type = content_type
 
     def to_dict(self):
-        reply_dict = dict()
-        reply_dict[CONTENT_TYPE_FIELD] = self.content_type.value
+        reply_dict = {CONTENT_TYPE_FIELD: self.content_type.value,
+                      PAYLOAD_FIELD: self.payload}
         if self.title:
             reply_dict[TITLE_FIELD] = self.title
-        reply_dict[PAYLOAD_FIELD] = self.payload
-        if self.image_url is not None:
+        if self.image_url:
             reply_dict[IMAGE_FIELD] = self.image_url
         print(reply_dict)
         return reply_dict
@@ -123,21 +119,24 @@ class Messager(object):
     def __init__(self, access_token):
         self.access_token = access_token
 
-    def subscribe_to_page(self):
-        return requests.post("https://graph.facebook.com/v2.9/me/subscribed_apps?access_token={token}"
-                             .format(token=self.access_token))
+    def subscribe_to_page(self):  # Why v2.9 here
+        fmt = "https://graph.facebook.com/v2.9/me/subscribed_apps?access_token={token}"
+        return requests.post(fmt.format(token=self.access_token))
 
-    def set_greeting_text(self, text):
+    def set_greeting_text(self, text):  # And v2.6 here
         data = {"setting_type": "greeting", "greeting": {"text": text}}
-        return requests.post("https://graph.facebook.com/v2.6/me/thread_settings?access_token={token}"
-                             .format(token=self.access_token), headers={"Content-Type": "application/json"},
+        fmt = "https://graph.facebook.com/v2.6/me/thread_settings?access_token={token}"
+        return requests.post(fmt.format(token=self.access_token),
+                             headers={"Content-Type": "application/json"},
                              data=json.dumps(data))
 
-    def set_get_started_button_payload(self, payload):
-        data = {"setting_type": "call_to_actions", "thread_state": "new_thread",
+    def set_get_started_button_payload(self, payload):  # And v2.6 here
+        data = {"setting_type": "call_to_actions",
+                "thread_state": "new_thread",
                 "call_to_actions": [{"payload": payload}]}
-        return requests.post("https://graph.facebook.com/v2.6/me/thread_settings?access_token={token}"
-                             .format(token=self.access_token), headers={"Content-Type": "application/json"},
+        fmt = URL_BASE + "thread_settings?access_token={token}"
+        return requests.post(fmt.format(token=self.access_token),
+                             headers={"Content-Type": "application/json"},
                              data=json.dumps(data))
 
     def send_text(self, user_id, text):
@@ -156,10 +155,7 @@ class Messager(object):
                     }})
 
     def send_buttons(self, user_id, title, button_list):
-        buttons = list(dict())
-        for i in range(len(button_list)):
-            buttons.append(button_list[i].to_dict())
-
+        buttons = [button.to_dict() for button in button_list]
         self._send({RECIPIENT_FIELD: self._build_recipient(user_id),
                     MESSAGE_FIELD: {
                         ATTACHMENT_FIELD: {
@@ -173,9 +169,7 @@ class Messager(object):
                     }})
 
     def send_generic(self, user_id, element_list):
-        elements = list(dict())
-        for i in range(len(element_list)):
-            elements.append(element_list[i].to_dict())
+        elements = [element.to_dict() for element in element_list]
         self._send({RECIPIENT_FIELD: self._build_recipient(user_id),
                     MESSAGE_FIELD: {
                         ATTACHMENT_FIELD: {
@@ -198,26 +192,28 @@ class Messager(object):
                     }})
 
     def typing(self, user_id, on=True):
-        data = {RECIPIENT_FIELD: {"id": user_id}, "sender_action": "typing_on" if on else "typing_off"}
-        return requests.post("https://graph.facebook.com/v2.6/me/messages?access_token={token}".format(
-            token=self.access_token), headers={"Content-Type": "application/json"}, data=json.dumps(data))
+        sender_action = "typing_on" if on else "typing_off"
+        data = {RECIPIENT_FIELD: {"id": user_id}, "sender_action": sender_action}
+        fmt = URL_BASE + "messages?access_token={token}"
+        return requests.post(fmt.format(token=self.access_token),
+                             headers={"Content-Type": "application/json"},
+                             data=json.dumps(data))
 
     @staticmethod
     def _build_recipient(user_id):
         return {Recipient.ID.value: user_id}
 
     def _send(self, message_data):
-        post_message_url = "https://graph.facebook.com/v2.6/me/messages?access_token={token}".format(
+        post_message_url = URL_BASE + "messages?access_token={token}".format(
             token=self.access_token)
         response_message = json.dumps(message_data)
         print(response_message)
         req = requests.post(post_message_url,
                             headers={"Content-Type": "application/json"},
                             data=response_message)
-        print("[{status}/{reason}/{text}] Reply to {recipient}: {content}".format(
-            status=req.status_code,
-            reason=req.reason,
-            text=req.text,
-            recipient=message_data[RECIPIENT_FIELD],
-            content=message_data[MESSAGE_FIELD]))
-        pass
+        fmt = "[{status}/{reason}/{text}] Reply to {recipient}: {content}"
+        print(fmt.format(status=req.status_code,
+                         reason=req.reason,
+                         text=req.text,
+                         recipient=message_data[RECIPIENT_FIELD],
+                         content=message_data[MESSAGE_FIELD]))
