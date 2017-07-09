@@ -67,12 +67,9 @@ def fb_webhook():
 def fb_receive_message():
     message_entries = json.loads(request.data.decode('utf8'))['entry']
     for entry in message_entries:
-        messagings = entry['messaging']
-        for message in messagings:
-            sender = message['sender']['id']
+        for message in entry['messaging']:
             if message.get('message'):
-                text = message['message']['text']
-                print("{} says {}".format(sender, text))
+                print("{sender[id]} says {message[text]}".format(**message))
     return "Hi"
 ```
 
@@ -144,8 +141,7 @@ The `GenericElement(title, subtitle, image_url, buttons)` class defines a horizo
 
 ```python
 project_list = []
-for project_id in projects.keys():
-    project = projects[project_id]
+for project_id, project in projects.items():
     project_list.append(GenericElement(
         project["title"],
         project["description"],

@@ -24,12 +24,9 @@ def fb_webhook():
 def fb_receive_message():
     message_entries = json.loads(request.data.decode('utf8'))['entry']
     for entry in message_entries:
-        messagings = entry['messaging']
-        for message in messagings:
-            sender = message['sender']['id']
+        for message in entry['messaging']:
             if message.get('message'):
-                text = message['message']['text']
-                print("{} says {}".format(sender, text))
+                print("{sender[id]} says {message[text]}".format(**message))
     return "Hi"
 
 
