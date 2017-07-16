@@ -120,12 +120,12 @@ class Messager(object):
         self.access_token = access_token
 
     def subscribe_to_page(self):
-        fmt = "https://graph.facebook.com/v2.9/me/subscribed_apps?access_token={token}"
+        fmt = URL_BASE + "me/subscribed_apps?access_token={token}"
         return requests.post(fmt.format(token=self.access_token))
 
     def set_greeting_text(self, text):
         data = {"setting_type": "greeting", "greeting": {"text": text}}
-        fmt = "https://graph.facebook.com/v2.9/me/thread_settings?access_token={token}"
+        fmt = URL_BASE + "me/thread_settings?access_token={token}"
         return requests.post(fmt.format(token=self.access_token),
                              headers={"Content-Type": "application/json"},
                              data=json.dumps(data))
