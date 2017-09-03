@@ -7,7 +7,7 @@ PyMessager is a Python API for [Facebook Messenger](https://developers.facebook.
 
 ![](https://raw.githubusercontent.com/enginebai/PyMessager/master/art/graphic.png)
 
-Complete tutorials are on [Develop a Facebook Bot Using Python](https://medium.com/@enginebai/用python開發facebook-bot-26594f13f9f7#.7iwm148ag) and [Chatbot: From 0 To 1](https://medium.com/dualcores-studio/%E8%81%8A%E5%A4%A9%E6%A9%9F%E5%99%A8%E4%BA%BA%E5%85%A5%E9%96%80-%E5%BE%9E0%E5%88%B01-4792b53a1318) where you can find more detailed information to setup and develop.
+Complete tutorials are on [Develop a Facebook Bot Using Python](https://medium.com/@enginebai/%E7%94%A8python%E9%96%8B%E7%99%BCfacebook-bot-26594f13f9f7#.7iwm148ag) and [Chatbot: From 0 To 1](https://medium.com/dualcores-studio/%E8%81%8A%E5%A4%A9%E6%A9%9F%E5%99%A8%E4%BA%BA%E5%85%A5%E9%96%80-%E5%BE%9E0%E5%88%B01-4792b53a1318) where you can find more detailed information to setup and develop.
 
 ## Before Starting
 1. Prepare a Facebook Page. (to create if you don't have one)
