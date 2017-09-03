@@ -58,7 +58,7 @@ def fb_webhook():
     verify_token = request.args.get('hub.verify_token')
     if verification_code == verify_token:
         return request.args.get('hub.challenge')
-```        
+```
 
 2. Receive the message
 
@@ -98,12 +98,12 @@ client.send_image(recipient_id, "http://image-url.jpg")
 ### Quick Replies
 The `QuickReply(title, payload, image_url, content_type)`  class defines a present buttons to the user in response to a message.
 
-|Parameter   |Description   |Required   |
-|---|---|---|
-|`title`   |The button title   |Y   |
-|`payload`   |The click payload string  |Y   |
-|`image_url`   |The icon image URL   |N   |
-|`content_type`   |`TEXT` or `LOCATION`   |Y    |
+| Parameter      | Description              | Required |
+| -------------- | ------------------------ | -------- |
+| `title`        | The button title         | Y        |
+| `payload`      | The click payload string | Y        |
+| `image_url`    | The icon image URL       | N        |
+| `content_type` | `TEXT` or `LOCATION`     | Y        |
 
 ```python
 client.send_quick_replies(recipient_id, "Help", [
@@ -116,15 +116,15 @@ client.send_quick_replies(recipient_id, "Help", [
 ### Button Template
 The `ActionButton(button_type, title, url, payload)`  class defines button template which contains a text and buttons attachment to request input from the user.
 
-|Parameter   |Description   |Required   |
-|---|---|---|
-|`button_type`   |`WEB_URL` or `POSTBACK`   |Y   |
-|`title`   |The button title  |Y   |
-|`url`   |The link   |Only if `button_type` is `url`   |
-|`payload`   |The click payload string   |Only if `button_type` is `POSTBACK`    |
+| Parameter     | Description              | Required                            |
+| ------------- | ------------------------ | ----------------------------------- |
+| `button_type` | `WEB_URL` or `POSTBACK`  | Y                                   |
+| `title`       | The button title         | Y                                   |
+| `url`         | The link                 | Only if `button_type` is `url`      |
+| `payload`     | The click payload string | Only if `button_type` is `POSTBACK` |
 
 ```python
-client.send_buttons(recipient_id, "你可以透過下列方式找到我", [
+client.send_buttons(recipient_id, "You can find me with below", [
     ActionButton(ButtonType.WEB_URL, "Blog", "http://blog.enginebai.com"),
 	ActionButton(ButtonType.POSTBACK, "Email", Intent.EMAIL)
 ])
@@ -132,11 +132,11 @@ client.send_buttons(recipient_id, "你可以透過下列方式找到我", [
 ### Generic Template
 The `GenericElement(title, subtitle, image_url, buttons)` class defines a horizontal scrollable carousel of items, each composed of an image attachment, short description and buttons to request input from the user.
 
-|Parameter   |Description   |Required   |
-|---|---|---|
-|`title_text`   |The message main title|Y   |
-|`subtitle_text`   |The message subtitle, leave it empty if you don't need it|N   |
-|`button_list`   |The list of `ActionButton`   |Y |
+| Parameter       | Description                              | Required |
+| --------------- | ---------------------------------------- | -------- |
+| `title_text`    | The message main title                   | Y        |
+| `subtitle_text` | The message subtitle, leave it empty if you don't need it | N        |
+| `button_list`   | The list of `ActionButton`               | Y        |
 
 
 ```python
@@ -148,7 +148,7 @@ for project_id, project in projects.items():
         config.api_root + project["image_url"], [
             ActionButton(ButtonType.POSTBACK,
                          self._get_string("button_more"),
-                         # Payload用Intent本身作為開頭
+                         # Payload use Intent for the beginning
                          payload=Intent.PROJECTS.name + project_id)
         ]))
 client.send_generic(recipient_id, project_list)
@@ -197,10 +197,10 @@ Feel free to submit bug reports or feature requests and make sure you read the c
 	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 	copies of the Software, and to permit persons to whom the Software is
 	furnished to do so, subject to the following conditions:
-
+	
 	The above copyright notice and this permission notice shall be included in
 	all copies or substantial portions of the Software.
-
+	
 	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
