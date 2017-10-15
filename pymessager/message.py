@@ -62,6 +62,7 @@ class ContentType(Enum):
 
 
 class ActionButton:
+
     def __init__(self, button_type, title, url=None, payload=None):
         self.button_type = button_type
         self.title = title
@@ -80,6 +81,7 @@ class ActionButton:
 
 
 class GenericElement:
+
     def __init__(self, title, subtitle, image_url, buttons):
         self.title = title
         self.subtitle = subtitle
@@ -87,7 +89,8 @@ class GenericElement:
         self.buttons = buttons
 
     def to_dict(self):
-        element_dict = {BUTTONS_FIELD: [button.to_dict() for button in self.buttons]}
+        element_dict = {BUTTONS_FIELD: [
+            button.to_dict() for button in self.buttons]}
         if self.title:
             element_dict[TITLE_FIELD] = self.title
         if self.subtitle:
@@ -98,6 +101,7 @@ class GenericElement:
 
 
 class QuickReply:
+
     def __init__(self, title, payload, image_url=None, content_type=ContentType.TEXT):
         self.title = title
         self.payload = payload
@@ -116,6 +120,7 @@ class QuickReply:
 
 
 class Messager(object):
+
     def __init__(self, access_token):
         self.access_token = access_token
 
@@ -152,7 +157,7 @@ class Messager(object):
                                 URL_FIELD: image
                             }
                         }
-                    }})
+        }})
 
     def send_buttons(self, user_id, title, button_list):
         buttons = [button.to_dict() for button in button_list]
@@ -166,7 +171,7 @@ class Messager(object):
                                 BUTTONS_FIELD: buttons
                             }
                         }
-                    }})
+        }})
 
     def send_generic(self, user_id, element_list):
         elements = [element.to_dict() for element in element_list]
@@ -179,7 +184,7 @@ class Messager(object):
                                 ELEMENTS_FIELD: elements
                             }
                         }
-                    }})
+        }})
 
     def send_quick_replies(self, user_id, title, reply_list):
         replies = list(dict())
@@ -189,11 +194,12 @@ class Messager(object):
                     MESSAGE_FIELD: {
                         TEXT_FIELD: title,
                         QUICK_REPLIES_FIELD: replies
-                    }})
+        }})
 
     def typing(self, user_id, on=True):
         sender_action = "typing_on" if on else "typing_off"
-        data = {RECIPIENT_FIELD: {"id": user_id}, "sender_action": sender_action}
+        data = {RECIPIENT_FIELD: {"id": user_id},
+                "sender_action": sender_action}
         fmt = URL_BASE + "messages?access_token={token}"
         return requests.post(fmt.format(token=self.access_token),
                              headers={"Content-Type": "application/json"},
