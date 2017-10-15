@@ -2,12 +2,15 @@
 # -*- coding: utf8 -*-
 import json
 from enum import Enum
+import logging
 
 import requests
 
 __author__ = "enginebai"
 
-URL_BASE = "https://graph.facebook.com/v2.9/me/"
+URL_BASE = "https://graph.facebook.com/v2.9/"
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 # send message fields
 RECIPIENT_FIELD = "recipient"
@@ -62,7 +65,6 @@ class ContentType(Enum):
 
 
 class ActionButton:
-
     def __init__(self, button_type, title, url=None, payload=None):
         self.button_type = button_type
         self.title = title
@@ -81,7 +83,6 @@ class ActionButton:
 
 
 class GenericElement:
-
     def __init__(self, title, subtitle, image_url, buttons):
         self.title = title
         self.subtitle = subtitle
@@ -101,8 +102,9 @@ class GenericElement:
 
 
 class QuickReply:
-
-    def __init__(self, title, payload, image_url=None, content_type=ContentType.TEXT):
+    def __init__(self, title, payload,
+                 image_url=None,
+                 content_type=ContentType.TEXT):
         self.title = title
         self.payload = payload
         self.image_url = image_url
@@ -115,12 +117,11 @@ class QuickReply:
             reply_dict[TITLE_FIELD] = self.title
         if self.image_url:
             reply_dict[IMAGE_FIELD] = self.image_url
-        print(reply_dict)
+        logger.debug(reply_dict)
         return reply_dict
 
 
 class Messager(object):
-
     def __init__(self, access_token):
         self.access_token = access_token
 
@@ -157,7 +158,7 @@ class Messager(object):
                                 URL_FIELD: image
                             }
                         }
-        }})
+                    }})
 
     def send_buttons(self, user_id, title, button_list):
         buttons = [button.to_dict() for button in button_list]
@@ -171,7 +172,7 @@ class Messager(object):
                                 BUTTONS_FIELD: buttons
                             }
                         }
-        }})
+                    }})
 
     def send_generic(self, user_id, element_list):
         elements = [element.to_dict() for element in element_list]
@@ -180,11 +181,12 @@ class Messager(object):
                         ATTACHMENT_FIELD: {
                             TYPE_FIELD: AttachmentType.TEMPLATE.value,
                             PAYLOAD_FIELD: {
-                                TEMPLATE_TYPE_FIELD: TemplateType.GENERIC.value,
+                                TEMPLATE_TYPE_FIELD:
+                                    TemplateType.GENERIC.value,
                                 ELEMENTS_FIELD: elements
                             }
                         }
-        }})
+                    }})
 
     def send_quick_replies(self, user_id, title, reply_list):
         replies = list(dict())
@@ -194,7 +196,7 @@ class Messager(object):
                     MESSAGE_FIELD: {
                         TEXT_FIELD: title,
                         QUICK_REPLIES_FIELD: replies
-        }})
+                    }})
 
     def typing(self, user_id, on=True):
         sender_action = "typing_on" if on else "typing_off"
@@ -213,13 +215,13 @@ class Messager(object):
         post_message_url = URL_BASE + "messages?access_token={token}".format(
             token=self.access_token)
         response_message = json.dumps(message_data)
-        print(response_message)
+        logger.debug(response_message)
         req = requests.post(post_message_url,
                             headers={"Content-Type": "application/json"},
                             data=response_message)
         fmt = "[{status}/{reason}/{text}] Reply to {recipient}: {content}"
-        print(fmt.format(status=req.status_code,
-                         reason=req.reason,
-                         text=req.text,
-                         recipient=message_data[RECIPIENT_FIELD],
-                         content=message_data[MESSAGE_FIELD]))
+        logger.debug(fmt.format(status=req.status_code,
+                                reason=req.reason,
+                                text=req.text,
+                                recipient=message_data[RECIPIENT_FIELD],
+                                content=message_data[MESSAGE_FIELD]))
