@@ -8,7 +8,7 @@ import requests
 
 __author__ = "enginebai"
 
-URL_BASE = "https://graph.facebook.com/v2.9/"
+URL_BASE = "https://graph.facebook.com/v2.9/me/"
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
@@ -126,12 +126,12 @@ class Messager(object):
         self.access_token = access_token
 
     def subscribe_to_page(self):
-        fmt = URL_BASE + "me/subscribed_apps?access_token={token}"
+        fmt = URL_BASE + "subscribed_apps?access_token={token}"
         return requests.post(fmt.format(token=self.access_token))
 
     def set_greeting_text(self, text):
         data = {"setting_type": "greeting", "greeting": {"text": text}}
-        fmt = URL_BASE + "me/thread_settings?access_token={token}"
+        fmt = URL_BASE + "thread_settings?access_token={token}"
         return requests.post(fmt.format(token=self.access_token),
                              headers={"Content-Type": "application/json"},
                              data=json.dumps(data))
