@@ -8,7 +8,7 @@ import requests
 
 __author__ = "enginebai"
 
-URL_BASE = "https://graph.facebook.com/v2.9/me/"
+URL_BASE = "https://graph.facebook.com/v2.12/me/"
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
