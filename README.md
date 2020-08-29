@@ -91,8 +91,8 @@ There are several types of message: `text`, `image`, `quick replies`, `button te
 Send a simple text or an image to a recipient, just make sure that image URL is a valid link.
 
 ```python
-client.send_text(recipient_id, "Hello, I'm enginebai."
-client.send_image(recipient_id, "http://image-url.jpg")
+client.send_text(user_id, "Hello, I'm enginebai.")
+client.send_image(user_id, "http://image-url.jpg")
 ```
 
 ### Quick Replies
@@ -106,7 +106,7 @@ The `QuickReply(title, payload, image_url, content_type)`  class defines a prese
 | `content_type` | `TEXT` or `LOCATION`     | Y        |
 
 ```python
-client.send_quick_replies(recipient_id, "Help", [
+client.send_quick_replies(user_id, "Help", [
          QuickReply("Projects", Intent.PROJECT),
          QuickReply("Blog", Intent.BLOG),
          QuickReply("Contact Me", Intent.CONTACT_ME)
@@ -124,7 +124,7 @@ The `ActionButton(button_type, title, url, payload)`  class defines button templ
 | `payload`     | The click payload string | Only if `button_type` is `POSTBACK` |
 
 ```python
-client.send_buttons(recipient_id, "You can find me with below", [
+client.send_buttons(user_id, "You can find me with below", [
     ActionButton(ButtonType.WEB_URL, "Blog", "http://blog.enginebai.com"),
 	ActionButton(ButtonType.POSTBACK, "Email", Intent.EMAIL)
 ])
@@ -151,7 +151,7 @@ for project_id, project in projects.items():
                          # Payload use Intent for the beginning
                          payload=Intent.PROJECTS.name + project_id)
         ]))
-client.send_generic(recipient_id, project_list)
+client.send_generic(user_id, project_list)
 ```
 
 ## Utility APIs
